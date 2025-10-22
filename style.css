@@ -140,7 +140,8 @@ body {
     grid-template-columns: 1fr;
   }
   .caption-section {
-    margin-top: -40px;
+    margin-top: 30px;
   }
   .card-inner { height: 160px; }
+
 }
