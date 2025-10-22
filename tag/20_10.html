@@ -62,45 +62,32 @@
     .image-card:hover img{ transform: scale(1.04); }
 
     /* ---------- Video section: mỗi video giữ kích thước thật (không ép) ---------- */
-    .video-section{
-      display:flex;
-      flex-direction:column;
-      gap:20px;
-      align-items:center; /* căn giữa các video */
-      margin-bottom:32px;
+    .video-section {
+      display: flex;
+      flex-wrap: wrap;          /* cho phép xuống hàng nếu nhiều video */
+      justify-content: center;  /* căn giữa các video ngang */
+      gap: 24px;                /* khoảng cách giữa các khung video */
+      margin-bottom: 32px;
       padding: 8px 0;
     }
-
-    /* video-item là khung chứa video; width:auto để không ép video,
-       nhưng giới hạn max-width để không vượt quá container */
     .video-item{
-      display:flex;
-      justify-content:center;
-      width:100%;
-      /* giới hạn chiều ngang video tối đa; thay đổi nếu muốn */
-      max-width: 900px;
-      padding: 8px;
-      background: transparent;
+      /* dễ chỉnh: thay --video-size ở đây để đổi kích thước toàn bộ khung */
+      --video-size: clamp(200px, 28vw, 355px); /* min, responsive, max */
+      width: var(--video-size);
+      aspect-ratio: 9/16;      /* giữ tỉ lệ, tự điều chỉnh chiều cao */
+      border-radius: var(--card-radius);
+      overflow: hidden;        /* đảm bảo poster/video bị cắt theo bo góc */
+      background: #000;
+      display: block;
     }
 
-    /* style video: không ép tỉ lệ, bo góc */
-    .video-item video{
-      display:block;
-      width: auto;          /* trọng tâm: không ép chiều ngang cứng */
-      max-width: 100%;      /* nhưng tối đa không vượt khung cha */
-      height: auto;         /* giữ tỉ lệ gốc */
-      border-radius: 12px;
-      overflow:hidden;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-      background:#000;
+    video.autoposter {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;      /* tương tự image-card */
+      border-radius: inherit; /* an toàn: kế thừa bo góc (wrapper đã clip) */
     }
-
-    /* Nếu muốn mỗi video có khung nền/viền */
-    .video-frame{
-      border-radius: 12px;
-      overflow: hidden;
-    }
-
     /* responsive: trên mobile ảnh 1 cột; video vẫn full-width (nhưng giữ tỉ lệ) */
     @media (max-width: 900px){
       .image-gallery{
@@ -173,18 +160,30 @@
     <!-- VIDEO SECTION -->
     <div class="video-section">
       <!-- Mỗi video-item chứa video; video sẽ hiển thị ở kích thước thực (max không vượt quá khung) -->
-      <video class="autoposter" preload="metadata" muted playsinline controls>
-        <source src="../images/20_10/7129948172167.mp4" type="video/mp4">
-      </video>
-      <video class="autoposter" preload="metadata" muted playsinline controls>
-        <source src="../images/20_10/7129949113869.mp4" type="video/mp4">
-      </video>
-      <video class="autoposter" preload="metadata" muted playsinline controls>
-        <source src="../images/20_10/7129979523149.mp4" type="video/mp4">
-      </video>
-      <video class="autoposter" preload="metadata" muted playsinline controls>
-        <source src="../images/20_10/7130367190779.mp4" type="video/mp4">
-      </video>
+      <div class="video-item">
+        <video class="autoposter" preload="metadata" muted playsinline controls>
+          <source src="../images/20_10/7129948172167.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="video-item">
+        <video class="autoposter" preload="metadata" muted playsinline controls>
+          <source src="../images/20_10/7129949113869.mp4" type="video/mp4">
+        </video>        
+      </div>
+      <div class="video-item">
+        <video class="autoposter" preload="metadata" muted playsinline controls>
+          <source src="../images/20_10/7129979523149.mp4" type="video/mp4">
+        </video>   
+      </div>
+      <div class="video-item">
+        <video class="autoposter" preload="metadata" muted playsinline controls>
+          <source src="../images/20_10/7130367190779.mp4" type="video/mp4">
+        </video>        
+
+      </div>
+
+
+
 
       <script>
       document.querySelectorAll('video.autoposter').forEach(video => {
