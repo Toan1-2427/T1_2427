@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toán 1 24-27</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<a href="/" style="position: fixed;width:50px;height:50px; top: 10px; left: 10px; color: #B1E5B4; text-decoration: none; font-size: 36px; z-index: 1000; padding: 5px; border-radius: 5px;"><i class="fas fa-arrow-left"></i></a>
+  <canvas id="floating-dots" style="position:absolute;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none;"></canvas>
+  <!-- Bỏ navbar Trang Home Tag và footer copyright -->
+  <div class="page">
+    <section class="cards-section">
+      <div class="cards">
+        <a class="card" href="20_10.html" aria-label="Mở Tag 1">
+          <div class="card-inner">
+            <i class="fas fa-tag icon"></i>
+            <h2>20_10</h2>
+            <p>18/10/2025</p>
+          </div>
+        </a>
+        <a class="card" href="olympia.html" aria-label="Mở Tag Olympia">
+          <div class="card-inner">
+            <i class="fas fa-trophy icon"></i>
+            <h2>Olympia</h2>
+            <p>12/10/2025</p>
+          </div>
+        </a>
+        <!-- Thêm các khung tag khác ở đây nếu muốn -->
+      </div>
+    </section>
+  </div>
+  <script>
+    // Hiệu ứng bong bóng điểm ảnh nền
+    const canvas = document.getElementById('floating-dots');
+    const ctx = canvas.getContext('2d');
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    function resizeCanvas() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    }
+    window.addEventListener('resize', resizeCanvas);
+
+    const DOTS = 200;
+    const dots = [];
+    for (let i = 0; i < DOTS; i++) {
+      dots.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: 1 + Math.random() * 4,
+        dx: (Math.random() - 0.5) * 0.3,
+        dy: (Math.random() - 0.5) * 0.3,
+        alpha: 0.3 + Math.random() * 0.4
+      });
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, width, height);
+      for (const dot of dots) {
+        ctx.beginPath();
+        ctx.arc(dot.x, dot.y, dot.r, 0, 2 * Math.PI);
+        ctx.fillStyle = `rgba(255,255,255,${dot.alpha * 0.3})`;
+        ctx.shadowColor = 'rgba(255,255,255,0.5)';
+        ctx.shadowBlur = 12;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    function update() {
+      for (const dot of dots) {
+        dot.x += dot.dx;
+        dot.y += dot.dy;
+        if (dot.x < 0 || dot.x > width) dot.dx *= -1;
+        if (dot.y < 0 || dot.y > height) dot.dy *= -1;
+      }
+    }
+
+    function animate() {
+      update();
+      draw();
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
