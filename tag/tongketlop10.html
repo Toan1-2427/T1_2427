@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tổng kết lớp 10</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <style>
+    :root {
+      --page-max: 1200px;
+      --gap: 16px;
+      --card-radius: 10px;
+      --bg: #928282FFFFFF;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background-color:#FFEEEE;
+      color: #111;
+      line-height: 1.4;
+    }
+    .container {
+      max-width: var(--page-max);
+      margin: 0 auto;
+      padding: 28px;
+      background: var(--bg);
+    }
+    h1.section-title {
+      margin: 0 0 18px;
+      text-align: center;
+      font-size: clamp(20px, 3.5vw, 32px);
+    }
+    .image-gallery {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 32px;
+      min-height: 60vh;
+    }
+    .image-display {
+      max-width: 100%;
+      max-height: 60vh;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      background: #000;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .image-display img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto;
+      transition: opacity 0.3s ease;
+      background: transparent;
+    }
+    .image-display img.fading, .video-display video.fading {
+      opacity: 0;
+    }
+    .gallery-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      font-size: 30px;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 5px;
+      pointer-events: auto;
+      z-index: 2;
+    }
+    .prev { left: 15px; }
+    .next { right: 15px; }
+    .gallery-nav:hover { background: rgba(0,0,0,0.8); }
+    .video-section {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 32px;
+      min-height: 60vh;
+    }
+    .video-display {
+      max-width: 100%;
+      max-height: 60vh;
+      border-radius: var(--card-radius);
+      overflow: hidden;
+      background: #000;
+      width: 100%;
+    }
+    .video-display video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: opacity 0.3s ease;
+    }
+    video.autoposter {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      border-radius: inherit;
+    }
+    @media (max-width: 900px) {
+      .image-gallery { min-height: 40vh; margin-bottom: 6px; }
+      .video-section { min-height: 40vh; margin-bottom: 6px; }
+      .container { padding: 18px; }
+    }
+    .media-caption {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #444;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+<a href="home.html" style="position: fixed;width:50px;height:50px; top: 10px; left: 10px; color: #B1E5B4; text-decoration: none; font-size: 36px; z-index: 1000; padding: 5px; border-radius: 5px;"><i class="fas fa-arrow-left"></i></a>
+<div class="container">
+  <div class="image-gallery">
+    <button class="gallery-nav prev" id="image-prev"><</button>
+    <div class="image-display">
+      <img id="current-image" src="" alt="">
+    </div>
+    <button class="gallery-nav next" id="image-next">></button>
+  </div>
+  <div class="video-section">
+      <button class="gallery-nav prev" id="video-prev"><</button>
+      <div class="video-display">
+        <video id="current-video" controls preload="metadata" muted playsinline></video>
+      </div>
+      <button class="gallery-nav next" id="video-next">></button>
+    </div>
+
+    <script>
+      // Define media lists
+      const imageFiles = [
+        'z6628967684484_c16c9c7fe19aa344ae8a1f7ade45b351.jpg',
+        'z6628967676825_d0d50f12a2d504a063103459380bf510.jpg',
+        'z6628967673185_c07a57e9a8bbac6f253ff384ad0f3e5d.jpg',
+        'z6628967659663_21866d8f72424be1dd6663d22d980d65.jpg',
+        'z6628967654049_3849b9e2af6a82fe1a76c568de40eb81.jpg',
+        'z6628967648299_a1c50bfb03f71cbea55ac10fb82c23f3.jpg',
+        'z6628967642444_c9e0051f555d92e3de87e76d5c53726a.jpg',
+        'z6628967637010_109f9276403eccd2263c0ace85995fb9.jpg',
+        'z6628967606630_b22ebc34af2fea6d3baebca6cdc5d8c6.jpg',
+        'z6628967596652_11481db64a997efd3d60df8313483fab.jpg',
+        'z6628967590967_05dd58d829ddac0456197096ed6d1716.jpg',
+        'z6628967581845_e9cb830c4e98801ccc9fdd66b3fc6f16.jpg',
+        'z6628967573572_57c0441d2bfadbb67e9a0d75f53ea3f2.jpg',
+        'z6628967565585_2f691bfa3c752329ceaf7e693e74b542.jpg',
+        'z6628967557555_90e1c251b8194b206d52bba8bf05f579.jpg',
+        'z6628967553537_530ef654524b216b8a092c515db8453e.jpg',
+        'z6628967547020_d33c088ba5d2b8695c816d8dab1cc788.jpg',
+        'z6628967535647_b96f5ee29ac0742f95d44b9d9e8a97a6.jpg',
+        'z6628967530563_3ea1c1c8c884970a05cb7e0bc60de4a7.jpg',
+        'z6628967520149_14ff726b4ab69b69f88682f8962f5ab1.jpg',
+        'z6628967511231_bbc5fafef962d060cef1ffbac53bd537.jpg',
+        'z6628967502853_a1033846380ed4e970b823a8f4f53d19.jpg',
+        'z6628967494813_40ce4daea42f142aef689848b145a10d.jpg',
+        'z6628967490853_12f38a45f3b184e36fadcbadb5c6551c.jpg',
+        'z6628967483246_b4a1d6fdf0e5394560fb12331d6e2d2a.jpg',
+        'z6628967475965_f9ca14558d605f81b6452e00371a7ccb.jpg',
+        'z6628967470099_57915f1ccdfe06ab8ac213b474ba4ce1.jpg',
+        'z6628967461844_cbf725fda702519148804a5ac419d992.jpg',
+        'z6628967444787_6ee08e79f6546e4e1ae103400bea6153.jpg',
+        'z6628967418683_fbb953d8178474a33e42c05b1ec551f4.jpg',
+        'z6628967415393_381a3b3b648cecc325da12be316cd3f1.jpg'
+      ];
+
+      const videoFiles = [
+        '6628967667967.mp4'
+      ];
+
+      // Initialize image gallery
+      let currentImageIndex = 0;
+      const currentImage = document.getElementById('current-image');
+      if(imageFiles.length > 0) {
+        currentImage.src = `../images/Tổng kết lớp 10/${imageFiles[currentImageIndex]}`;
+      }
+
+      // Initialize video gallery
+      let currentVideoIndex = 0;
+      const currentVideo = document.getElementById('current-video');
+      currentVideo.src = `../images/Tổng kết lớp 10/${videoFiles[currentVideoIndex]}`;
+
+      // Autoposter for current video
+      const setPoster = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = currentVideo.videoWidth;
+        canvas.height = currentVideo.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(currentVideo, 0, 0, canvas.width, canvas.height);
+        const imgData = canvas.toDataURL('image/jpeg');
+        currentVideo.pause();
+        currentVideo.setAttribute('poster', imgData);
+        // Set aspect ratio to match video
+        const videoDisplay = document.querySelector('.video-display');
+        videoDisplay.style.aspectRatio = `${currentVideo.videoWidth} / ${currentVideo.videoHeight}`;
+      };
+
+      currentVideo.addEventListener('loadeddata', setPoster);
+
+      // Image navigation
+      document.getElementById('image-prev').addEventListener('click', () => {
+        if(imageFiles.length === 0) return;
+        currentImage.classList.add('fading');
+        setTimeout(() => {
+          currentImageIndex = (currentImageIndex - 1 + imageFiles.length) % imageFiles.length;
+          currentImage.src = `../images/Tổng kết lớp 10/${imageFiles[currentImageIndex]}`;
+          currentImage.classList.remove('fading');
+        }, 150);
+      });
+
+      document.getElementById('image-next').addEventListener('click', () => {
+        if(imageFiles.length === 0) return;
+        currentImage.classList.add('fading');
+        setTimeout(() => {
+          currentImageIndex = (currentImageIndex + 1) % imageFiles.length;
+          currentImage.src = `../images/Tổng kết lớp 10/${imageFiles[currentImageIndex]}`;
+          currentImage.classList.remove('fading');
+        }, 150);
+      });
+
+      // Video navigation
+      document.getElementById('video-prev').addEventListener('click', () => {
+        currentVideo.classList.add('fading');
+        setTimeout(() => {
+          currentVideoIndex = (currentVideoIndex - 1 + videoFiles.length) % videoFiles.length;
+          currentVideo.src = `../images/Tổng kết lớp 10/${videoFiles[currentVideoIndex]}`;
+          currentVideo.classList.remove('fading');
+        }, 150);
+      });
+
+      document.getElementById('video-next').addEventListener('click', () => {
+        currentVideo.classList.add('fading');
+        setTimeout(() => {
+          currentVideoIndex = (currentVideoIndex + 1) % videoFiles.length;
+          currentVideo.src = `../images/Tổng kết lớp 10/${videoFiles[currentVideoIndex]}`;
+          currentVideo.classList.remove('fading');
+        }, 150);
+      });
+    </script>
+
+
+  </div>
+</body>
+</html>
